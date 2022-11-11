@@ -75,8 +75,7 @@ def notes():
             c = db.cursor()
             statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,?,?,?,?);""" 
             print(statement) # probably not supposed to be here
-            userid = (session['userid'],time.strftime('%Y-%m-%d %H:%M:%S'),note,random.randrange(1000000000, 9999999999))
-            c.execute(statement, (userid,))
+            c.execute(statement, (session['userid'],time.strftime('%Y-%m-%d %H:%M:%S'),note,random.randrange(1000000000, 9999999999))
             db.commit()
             db.close()
         elif request.form['submit_button'] == 'import note':
@@ -89,8 +88,7 @@ def notes():
             if(len(result)>0):
                 row = result[0]
                 statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,?,?,?,?);"""  # all sanitize inputs.
-                parameters = (session['userid'],row[2],row[3],row[4])
-                c.execute(statement, (parameters,))
+                c.execute(statement, session['userid'],row[2],row[3],row[4])
             else:
                 importerror="No such note with that ID!"
             db.commit()
