@@ -73,22 +73,24 @@ def notes():
             note = request.form['noteinput']
             db = connect_db()
             c = db.cursor()
-            statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,?,?,?,?);""" 
+            statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,'%s','%s','%s','%s');""" 
             print(statement) # probably not supposed to be here
-            c.execute(statement, (session['userid'],time.strftime('%Y-%m-%d %H:%M:%S'),note,random.randrange(1000000000, 9999999999)))
+            userid = (session['userid'],time.strftime('%Y-%m-%d %H:%M:%S'),note,random.randrange(1000000000, 9999999999))
+            c.execute(statement, userid)
             db.commit()
             db.close()
         elif request.form['submit_button'] == 'import note':
             noteid = request.form['noteid']
             db = connect_db()
             c = db.cursor()
-            statement = """SELECT * from NOTES where publicID = ?"""  # vulnerable 
+            statement = """SELECT * from NOTES where publicID = ?""" 
             c.execute(statement, noteid)
             result = c.fetchall()
             if(len(result)>0):
                 row = result[0]
                 statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,?,?,?,?);"""  # all sanitize inputs.
-                c.execute(statement,(session['userid'],row[2],row[3],row[4]))
+                parameters = (session['userid'],row[2],row[3],row[4])
+                c.execute(statement, parameters)
             else:
                 importerror="No such note with that ID!"
             db.commit()
@@ -98,7 +100,8 @@ def notes():
     c = db.cursor()
     statement = "SELECT * FROM notes WHERE assocUser = ?;" 
     print(statement) # also
-    c.execute(statement,session['userid'])
+    userid = session['userid']
+    c.execute(statement,userid)
     notes = c.fetchall()
     print(notes) # also
     
