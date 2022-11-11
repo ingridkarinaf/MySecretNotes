@@ -73,7 +73,7 @@ def notes():
             note = request.form['noteinput']
             db = connect_db()
             c = db.cursor()
-            statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,'%s','%s','%s','%s');""" 
+            statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,?,?,?,?);""" 
             print(statement) # probably not supposed to be here
             userid = (session['userid'],time.strftime('%Y-%m-%d %H:%M:%S'),note,random.randrange(1000000000, 9999999999))
             c.execute(statement, userid)
@@ -117,7 +117,7 @@ def login():
         db = connect_db()
         c = db.cursor()
         statement = "SELECT * FROM users WHERE username = ? AND password = ?;" 
-        c.execute(statement,(username, password))
+        c.execute(statement,(str(username), str(password)))
         result = c.fetchall()
 
         if len(result) > 0:
