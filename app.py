@@ -101,7 +101,7 @@ def notes():
     statement = "SELECT * FROM notes WHERE assocUser = ?;" 
     print(statement) # also
     userid = session['userid']
-    c.execute(statement,userid)
+    c.execute(statement,(userid))
     notes = c.fetchall()
     print(notes) # also
     
