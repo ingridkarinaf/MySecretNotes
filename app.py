@@ -82,13 +82,13 @@ def notes():
             noteid = request.form['noteid']
             db = connect_db()
             c = db.cursor()
-            statement = """SELECT * from NOTES where publicID = ?"""  # vulnerable 
-            c.execute(statement, noteid)
+            statement = """SELECT * from NOTES where publicID = ?""" 
+            c.execute(statement, (noteid,))
             result = c.fetchall()
             if(len(result)>0):
                 row = result[0]
                 statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,?,?,?,?);"""  # all sanitize inputs.
-                c.execute(statement,(session['userid'],row[2],row[3],row[4]))
+                c.execute(statement, (session['userid'],row[2],row[3],row[4]))
             else:
                 importerror="No such note with that ID!"
             db.commit()
@@ -98,7 +98,8 @@ def notes():
     c = db.cursor()
     statement = "SELECT * FROM notes WHERE assocUser = ?;" 
     print(statement) # also
-    c.execute(statement,session['userid'])
+    userid = session['userid']
+    c.execute(statement,(userid,))
     notes = c.fetchall()
     print(notes) # also
     
@@ -142,12 +143,12 @@ def register():
         c = db.cursor()
         pass_statement = """SELECT * FROM users WHERE password = ?;""" 
         user_statement = """SELECT * FROM users WHERE username = ?;""" 
-        c.execute(pass_statement, password)
+        c.execute(pass_statement, (password,))
         if(len(c.fetchall())>0):
             errored = True
             passworderror = "The password must have both lowercase and uppercase letters"
 
-        c.execute(user_statement, username)
+        c.execute(user_statement, (username,))
         if(len(c.fetchall())>0):
             errored = True
             usererror = "That username is already in use by someone else!"
