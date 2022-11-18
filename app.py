@@ -175,9 +175,9 @@ def register():
         db.close()
     return render_template('register.html',usererror=usererror,passworderror=passworderror)
 
-# @app.route("/deletednotes/")
-# def deletednotes():
-#     return render_template('deletednotes.html')
+@app.route("/deletednotes/")
+def deletednotes():
+    return render_template('deletednotes.html')
 
 @app.route("/logout/")
 @login_required
