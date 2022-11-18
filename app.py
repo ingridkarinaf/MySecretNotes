@@ -74,7 +74,7 @@ def notes():
             db = connect_db()
             c = db.cursor()
             statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,?,?,?,?);""" 
-            print(statement) # probably not supposed to be here
+            print(statement)
             c.execute(statement, (session['userid'],time.strftime('%Y-%m-%d %H:%M:%S'),note,random.randrange(1000000000, 9999999999)))
             db.commit()
             db.close()
@@ -87,7 +87,7 @@ def notes():
             result = c.fetchall()
             if(len(result)>0):
                 row = result[0]
-                statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,?,?,?,?);"""  # all sanitize inputs.
+                statement = """INSERT INTO notes(id,assocUser,dateWritten,note,publicID) VALUES(null,?,?,?,?);"""
                 c.execute(statement, (session['userid'],row[2],row[3],row[4]))
             else:
                 importerror="No such note with that ID!"
@@ -97,11 +97,11 @@ def notes():
     db = connect_db()
     c = db.cursor()
     statement = "SELECT * FROM notes WHERE assocUser = ?;" 
-    print(statement) # also
+    print(statement)
     userid = session['userid']
     c.execute(statement,(userid,))
     notes = c.fetchall()
-    print(notes) # also
+    print(notes)
     
     return render_template('notes.html',notes=notes,importerror=importerror)
 
@@ -155,7 +155,7 @@ def register():
 
         if(not errored):
             statement = """INSERT INTO users(id,username,password) VALUES(null,?,?);"""
-            print(statement) #also
+            print(statement) 
             ex = c.execute(statement,(username,password))
             ex
             print(ex)
@@ -187,7 +187,7 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
-    #create database if it doesn't exist yet
+    # create database if it doesn't exist yet
     if not os.path.exists(app.database):
         init_db()
     runport = 5000
